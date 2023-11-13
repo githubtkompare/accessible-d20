@@ -1,8 +1,8 @@
 (function () {
-    let dice = [20,12,10,8,6,4];
+    let dice = [100,20,12,10,8,6,4,3,2];
+    let diceCount = 1;
     let rollCount = 0;
     let color = '';
-
     /**
      * Play an array of audio files in array order
      * @param file_names array
@@ -19,7 +19,6 @@
         });
         sound.play();
     }
-
     /**
      * Get a random number between one and the die parameter value
      * @param die
@@ -38,9 +37,37 @@
         return 1 + value % range
     }
 
+    /**
+     * Create the array of audio files to be played after a roll of hte dice
+     * @param die
+     * @param diceCount
+     * @param rollResult
+     * @returns {string[]}
+     */
+    function getAudioArray(die,diceCount,rollResult) {
+        let rollString = rollResult.toString();
+        if(rollResult < 21) {
+            return ['sound/numbers/'+diceCount+'.mp3','sound/letters/d.mp3','sound/numbers/'+die+'.mp3','sound/other/pause025.mp3','sound/numbers/'+rollString+'.mp3'];
+        } else if (rollResult < 100) {
+            let tens = rollString.charAt(0)+'0';
+            let ones = rollString.charAt(1);
+            console.log(tens+' : '+ones+'\n');
+            let returnArray = ['sound/numbers/'+diceCount+'.mp3','sound/letters/d.mp3','sound/numbers/'+die+'.mp3','sound/other/pause025.mp3','sound/numbers/'+tens+'.mp3'];
+            if (ones !== '0') {
+                returnArray.push('sound/numbers/'+ones+'.mp3')
+            }
+            return returnArray;
+        } else if (rollResult === 100) {
+            return ['sound/numbers/'+diceCount+'.mp3','sound/letters/d.mp3','sound/numbers/'+die+'.mp3','sound/other/pause025.mp3','sound/numbers/'+rollString+'.mp3'];
+        }
+    }
+
+    /**
+     * Run this on Window Load
+     */
     window.addEventListener("load", (event) => {
         dice.forEach(function (die) {
-            $('#buttons').append('<button id="'+die+'" class="btn btn-primary" type="button">Roll a d'+die+'</button>');
+            $('#buttons').append('<button id="'+die+'" class="btn btn-primary" type="button" value="'+diceCount+'">Roll '+diceCount+'d'+die+'</button>');
             $('#'+die).on('click', function () {
                 rollCount++;
                 let rollResult = roll(die);
@@ -51,8 +78,8 @@
                 } else {
                     color = '';
                 }
-                $('#tbody').prepend('<tr class="'+color+'"><th scope="row">'+rollCount+'</th><td>d'+die+'</td><td>'+rollResult.toString()+'</td>');
-                play_audio(['sound/letters/d.mp3','sound/numbers/'+die.toString()+'.mp3','sound/other/pause025.mp3','sound/numbers/'+rollResult.toString()+'.mp3']);
+                $('#tbody').prepend('<tr class="'+color+'"><th scope="row">'+rollCount+'</th><td>'+diceCount+'d'+die+'</td><td>'+rollResult.toString()+'</td>');
+                play_audio(getAudioArray(die,diceCount,rollResult));
 
             });
         });
