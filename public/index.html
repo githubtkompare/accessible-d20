@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body id="body">
+<main>
+    <div class="px-4 py-5 my-1 text-center">
+        <h1 class="display-5 fw-bold text-body-emphasis"><i class="fa-solid fa-dice-d20"></i> RPG Dice Roller <i class="fa-solid fa-dice-d20"></i></h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">Quickly roll any standard size role playing game die by clicking the buttons below.</p>
+            <div class="d-grid gap-3">
+                <button id="d20" class="btn btn-primary" type="button">d20</button>
+                <button id="d12" class="btn btn-primary" type="button">d12</button>
+                <button id="d10" class="btn btn-primary" type="button">d10</button>
+                <button id="d8" class="btn btn-primary" type="button">d8</button>
+                <button id="d6" class="btn btn-primary" type="button">d6</button>
+                <button id="d4" class="btn btn-primary" type="button">d4</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <table class="table my-3 text-center table-bordered col-6 mx-auto">
+                <thead>
+                <tr>
+                    <th scope="col">Roll</th>
+                    <th scope="col">Die</th>
+                    <th scope="col">Result</th>
+                </tr>
+                </thead>
+                <tbody id="tbody" class="table-group-divider">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="js/index.js"></script>
+</body>
+</html>
