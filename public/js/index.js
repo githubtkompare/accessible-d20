@@ -132,7 +132,7 @@
         dice.forEach(function (die) {
             diceCount[die] = 1;
             $('#buttons').append(
-                '<div class="btn-group" role="group" aria-label="d'+die+' button group" aria-description="The d'+die+' button group">'
+                '<div class="btn-group" role="group" aria-label="The d'+die+' buttons">'
                 +'<button id="'+die+'" class="btn btn-dark" type="button" value="'+diceCount[die]+'">Roll '+diceCount[die]+'d'+die+'</button>'
                 +'<button id="'+die+'-add" class="btn btn-outline-dark" type="button">Add a d'+die+'</button>'
                 +'<button id="'+die+'-remove" class="btn btn-outline-dark" type="button">Remove a d'+die+'</button>'
