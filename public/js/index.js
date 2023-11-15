@@ -54,13 +54,11 @@
             }
         });
     }
-
     /**
      * Play an array of audio sprites in array order
      * @param spriteNames array
      */
     function play_audio(spriteNames) {
-        console.log(spriteNames+'\n');
         sound.play(spriteNames[0]);
 
         sound.on("end", () => {
@@ -99,27 +97,30 @@
         if(rollResult < 21) {
             return [diceCount.toString(),'d',die.toString(),'pause',rollString];
         } else if (rollResult < 100) {
-            let tens = rollString.charAt(0)+'0';
+            let tens = rollString.charAt(0);
             let ones = rollString.charAt(1);
-            console.log(tens+' : '+ones+'\n');
-            let returnArray = [diceCount.toString(),'d',die.toString(),'pause',tens];
+            let returnArray = [diceCount.toString(),'d',die.toString(),'pause',tens+'0'];
             if (ones !== '0') {
                 returnArray.push(ones)
             }
             return returnArray;
         } else if (rollResult < 1000) {
-            let hundreds = rollString.charAt(0)+'00';
-            let tens = rollString.charAt(1)+'0';
+            let hundreds = rollString.charAt(0);
+            let tens = rollString.charAt(1);
             let ones = rollString.charAt(2);
-            console.log(hundreds+' : '+tens+' : '+ones+'\n');
-            let returnArray = [diceCount.toString(),'d',die.toString(),'pause',hundreds];
-            if (tens !== '0') {
-                returnArray.push(tens);
+            let returnArray = [diceCount.toString(),'d',die.toString(),'pause',hundreds+'00'];
+            if(tens !== '1') {
+                if (tens !== '0') {
+                    returnArray.push(tens+'0');
+                }
+                if (ones !== '0') {
+                    returnArray.push(ones);
+                }
+                return returnArray;
+            } else {
+                returnArray.push(tens.concat('',ones));
+                return returnArray;
             }
-            if (ones !== '0') {
-                returnArray.push(ones);
-            }
-            return returnArray;
         } else {
             return [diceCount.toString(),'d',die.toString(),'pause',rollString];
         }
@@ -158,12 +159,10 @@
             });
             $('#'+die+'-add').on('click', function () {
                 if(sound === null) { createHowl(); }
-                console.log('click '+die+'\n');
-               if((die !== 100 && diceCount[die] < diceCountMax) || (die === 100 && diceCount[die] < 10) ) {
-                   diceCount[die]++;
-                   console.log(diceCount[die]+'\n');
-                   $('#'+die).attr('value', diceCount[die]).text('Roll '+diceCount[die]+'d'+die);
-               }
+                if((die !== 100 && diceCount[die] < diceCountMax) || (die === 100 && diceCount[die] < 10) ) {
+                    diceCount[die]++;
+                    $('#'+die).attr('value', diceCount[die]).text('Roll '+diceCount[die]+'d'+die);
+                }
                 if ( ! $('#mute').is(':checked')) {
                     play_audio([diceCount[die].toString(),'d',die.toString()]);
                 }
