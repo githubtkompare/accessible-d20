@@ -51,7 +51,7 @@
                 }
                 let voice = diceCount[die]+'d'+die+'. You rolled a, ';
                 let tableCells = '<tr class="'+color+'"><th scope="row" tabindex="0"><span class="visually-hidden">Dice roll number </span>'+rollCount+'</th><td tabindex="0"><span class="visually-hidden">Dice </span>'+diceCount[die]+'d'+die+'</td>';
-                tableCells += '<td tabindex="0"><span class="visually-hidden">You rolled a, </span>';
+                tableCells += '<td tabindex="0"><span class="visually-hidden">You rolled a </span>';
                 for (let i = 0; i < rollResultArray.length; i++) {
                     tableCells += rollResultArray[i].toString()+', ';
                     voice += rollResultArray[i].toString()+', ';
