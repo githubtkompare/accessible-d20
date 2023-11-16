@@ -4,70 +4,6 @@
     let diceCountMax = 20;
     let rollCount = 0;
     let color = '';
-    let sound = null;
-
-    function createHowl() {
-        sound = new Howl({
-            src: ['sound/accessible-d20.mp3'],
-            sprite: {
-                pause: [0, 500],
-                addA: [610, 565],
-                removeA: [1263, 639],
-                d: [2117, 347],
-                1: [2547, 416],
-                2: [3096, 354],
-                3: [3586, 347],
-                4: [4072, 391],
-                5: [4599, 423],
-                6: [5104, 554],
-                7: [5773, 494],
-                8: [6414, 320],
-                9: [6916, 460],
-                10: [7489, 363],
-                11: [7940, 536],
-                12: [8638, 428],
-                13: [9289, 568],
-                14: [9956, 595],
-                15: [10690, 563],
-                16: [11386, 662],
-                17: [12173, 703],
-                18: [12964, 595],
-                19: [13665, 634],
-                20: [14442, 432],
-                30: [15051, 421],
-                40: [15608, 462],
-                50: [16209, 423],
-                60: [16742, 561],
-                70: [17398, 618],
-                80: [18163, 386],
-                90: [18679, 519],
-                100: [19291, 621],
-                200: [20106, 673],
-                300: [20957, 673],
-                400: [21781, 732],
-                500: [22785, 785],
-                600: [23673, 745],
-                700: [24554, 755],
-                800: [25429, 670],
-                900: [26280, 680],
-                1000: [27076, 866]
-            }
-        });
-    }
-    /**
-     * Play an array of audio sprites in array order
-     * @param spriteNames array
-     */
-    function play_audio(spriteNames) {
-        sound.play(spriteNames[0]);
-
-        sound.on("end", () => {
-            spriteNames.shift();
-            if (spriteNames.length > 0) {
-                sound.play(spriteNames[0]);
-            }
-        });
-    }
     /**
      * Get a random number between one and the die parameter value
      * @param die
@@ -86,46 +22,6 @@
         return 1 + value % range
     }
     /**
-     * Create the array of audio files to be played after a roll of hte dice
-     * @param die
-     * @param diceCount
-     * @param rollResult
-     * @returns {string[]}
-     */
-    function getAudioArray(die,diceCount,rollResult) {
-        let rollString = rollResult.toString();
-        if(rollResult < 21) {
-            return [diceCount.toString(),'d',die.toString(),'pause',rollString];
-        } else if (rollResult < 100) {
-            let tens = rollString.charAt(0);
-            let ones = rollString.charAt(1);
-            let returnArray = [diceCount.toString(),'d',die.toString(),'pause',tens+'0'];
-            if (ones !== '0') {
-                returnArray.push(ones)
-            }
-            return returnArray;
-        } else if (rollResult < 1000) {
-            let hundreds = rollString.charAt(0);
-            let tens = rollString.charAt(1);
-            let ones = rollString.charAt(2);
-            let returnArray = [diceCount.toString(),'d',die.toString(),'pause',hundreds+'00'];
-            if(tens !== '1') {
-                if (tens !== '0') {
-                    returnArray.push(tens+'0');
-                }
-                if (ones !== '0') {
-                    returnArray.push(ones);
-                }
-                return returnArray;
-            } else {
-                returnArray.push(tens.concat('',ones));
-                return returnArray;
-            }
-        } else {
-            return [diceCount.toString(),'d',die.toString(),'pause',rollString];
-        }
-    }
-    /**
      * Run this on Window Load
      */
     window.addEventListener("load", () => {
@@ -139,11 +35,12 @@
                 +'</div>'
             );
             $('#'+die).on('click', function () {
-                if(sound === null) { createHowl(); }
                 rollCount++;
-                let rollResult = 0;
+                let thisRoll = null, rollResult = 0, rollResultArray = [];
                 for (let i = 0; i < diceCount[die]; i++) {
-                     rollResult += roll(die);
+                    thisRoll = roll(die);
+                    rollResult += thisRoll;
+                    rollResultArray.push(thisRoll);
                 }
                 if(rollResult === 1) {
                     color = 'table-warning';
@@ -152,29 +49,30 @@
                 } else {
                     color = '';
                 }
-                $('#tbody').prepend('<tr class="'+color+'"><th scope="row">'+rollCount+'</th><td>'+diceCount[die]+'d'+die+'</td><td>'+rollResult.toString()+'</td>');
-                if ( ! $('#mute').is(':checked')) {
-                    play_audio(getAudioArray(die, diceCount[die], rollResult));
+                let voice = diceCount[die]+'d'+die+'. You rolled a, ';
+                let tableCells = '<tr class="'+color+'"><th scope="row" tabindex="0"><span class="visually-hidden">Dice roll number </span>'+rollCount+'</th><td tabindex="0"><span class="visually-hidden">Dice </span>'+diceCount[die]+'d'+die+'</td>';
+                tableCells += '<td tabindex="0"><span class="visually-hidden">You rolled a, </span>';
+                for (let i = 0; i < rollResultArray.length; i++) {
+                    tableCells += rollResultArray[i].toString()+', ';
+                    voice += rollResultArray[i].toString()+', ';
                 }
+                tableCells = tableCells.substring(0,tableCells.length-2);
+                voice = voice.substring(0,voice.length-2);
+                tableCells += '</td><td tabindex="0"><span class="visually-hidden">for a total of </span>'+rollResult+'</td></tr>';
+                voice += '. For a total of '+rollResult;
+                $('#tbody').prepend(tableCells);
+                $('#voice').append('<p>'+voice+'</p>');
             });
             $('#'+die+'-add').on('click', function () {
-                if(sound === null) { createHowl(); }
                 if((die !== 100 && diceCount[die] < diceCountMax) || (die === 100 && diceCount[die] < 10) ) {
                     diceCount[die]++;
                     $('#'+die).attr('value', diceCount[die]).text('Roll '+diceCount[die]+'d'+die);
                 }
-                if ( ! $('#mute').is(':checked')) {
-                    play_audio([diceCount[die].toString(),'d',die.toString()]);
-                }
             });
             $('#'+die+'-remove').on('click', function () {
-                if(sound === null) { createHowl(); }
                 if(diceCount[die] > 1) {
                     diceCount[die]--;
                     $('#'+die).attr('value', diceCount[die]).text('Roll '+diceCount[die]+'d'+die);
-                }
-                if ( ! $('#mute').is(':checked')) {
-                    play_audio([diceCount[die].toString(),'d',die.toString()]);
                 }
             });
         });
